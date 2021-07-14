@@ -1,0 +1,6 @@
+inquirer2==1.0.0
+prompt-toolkit==3.0.19
+Pygments==2.9.0
+six==1.16.0
+tabulate==0.8.9
+wcwidth==0.2.5
