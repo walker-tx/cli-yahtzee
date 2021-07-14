@@ -1,6 +1,6 @@
 import sys
 from dataclasses import dataclass
-from typing import List, Dict, Callable, Optional
+from typing import Dict, Callable, Optional
 
 import tabulate
 from inquirer2 import prompt, Separator
@@ -24,36 +24,6 @@ rules = [
     Yahtzee(),
     Chance()
 ]
-
-
-def make_scoreboard(_game: Game) -> str:
-    locked_rules = []
-    open_rules = []
-    for rc in _game.rule_controllers:
-        if rc.locked_in:
-            locked_rules.append(f'{rc.rule_name} ({rc.locked_value})')
-        else:
-            open_rules.append(f'{rc.rule_name} ({rc.calculate_value()})')
-
-    result = f'OPEN: {", ".join(open_rules)}\t' \
-             f'LOCKED IN: {", ".join(locked_rules)}'
-
-    return result
-
-
-def show_home_menu(_game: Game) -> List[dict]:
-    questions = [{
-        "type": "list",
-        "name": "action",
-        "message": "What would you like to do?",
-        "choices": [
-            "Hold or Release Dice",
-            "Roll",
-            "Select Rule"
-        ]
-    }]
-
-    return questions
 
 
 @dataclass
@@ -98,7 +68,7 @@ class StateMachine:
         print("  \\_/\\__,_|_| |_|\\__/___\\___|\\___|")
         print("---")
 
-        return prompt.prompt([{
+        answer = prompt.prompt([{
             "type": "list",
             "name": "next",
             "message": "What would you like to do?",
@@ -107,6 +77,8 @@ class StateMachine:
                 {"name": "Read the instructions", "value": State("PROMPTING_INSTRUCTIONS", {})}
             ]
         }]).get("next", State("STARTING_GAME", {}))
+
+        return answer
 
     def display_dice(self):
         die_tbl_rows = [['In-Play'], ['Holding']]
